@@ -37,7 +37,7 @@ const useGameStore = create((set, get) => ({
             nextState.mental = Math.min(100, state.mental + 1.5); // Slightly faster recovery
         } else {
             // Natural mental drain even when not resting
-            nextState.mental = Math.max(0, state.mental - 0.1); // Reduced from 0.2
+            nextState.mental = Math.max(0, state.mental - 0.05); // Reduced from 0.1
         }
 
         if (state.isCollapsed && (nextState.stamina ?? state.stamina) >= 40) {
@@ -47,11 +47,11 @@ const useGameStore = create((set, get) => ({
         let rep = state.reputation;
         if (state.duties.length >= 4 && newTime % 4 === 0) {
             rep -= 1.0;
-            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.5); // Reduced stress
+            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.1); // Reduced stress
         }
         if (state.duties.length > 0 && (newTime - state.duties[0].createdAt) > 45 && newTime % 8 === 0) {
             rep -= 1.0;
-            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.4);
+            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.1);
         }
 
         if (rep !== state.reputation) {
@@ -71,13 +71,13 @@ const useGameStore = create((set, get) => ({
             id: Date.now() + Math.random().toString(36).substr(2, 9),
             createdAt: state.time
         }],
-        mental: Math.max(0, state.mental - 1.5) // Reduced stress from 2.5
+        mental: Math.max(0, state.mental - 1.0) // Reduced stress from 1.5
     })),
 
     completeDuty: (id) => set((state) => ({
         duties: state.duties.filter(d => d.id !== id),
         completedDutiesCount: state.completedDutiesCount + 1,
-        mental: Math.min(100, state.mental + 4) // More satisfaction
+        mental: Math.min(100, state.mental + 6) // More satisfaction
     })),
 
     modifyStamina: (amount) => set((state) => {
@@ -97,7 +97,7 @@ const useGameStore = create((set, get) => ({
         const reputation = Math.max(0, Math.min(100, state.reputation + amount));
         let mentalUpdate = {};
         if (amount < 0) {
-            mentalUpdate.mental = Math.max(0, state.mental + (amount * 0.8)); // Reduced impact from 1.2
+            mentalUpdate.mental = Math.max(0, state.mental + (amount * 0.4)); // Reduced impact from 0.8
         }
         return { reputation, ...mentalUpdate };
     }),

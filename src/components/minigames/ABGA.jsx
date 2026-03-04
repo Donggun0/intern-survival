@@ -42,7 +42,7 @@ const ABGAGame = ({ gameData, onComplete }) => {
     const handleVerify = (action) => {
         if (action === 'proceed') {
             if (!orderPatientMatch) {
-                modifyMental(-30, '환자 확인 스킵! 엉뚱한 동맥을 찔렀습니다. 평판과 멘탈 급감!');
+                modifyMental(-10, '환자 확인 스킵! 엉뚱한 동맥을 찔렀습니다. 평판과 멘탈 급감!');
                 modifyReputation(-20);
                 onComplete(false); // fail minigame
             } else {
@@ -53,7 +53,7 @@ const ABGAGame = ({ gameData, onComplete }) => {
                 alert("이름표가 잘못된 것을 잡았습니다! 정확한 환자임을 확인하고 진행합니다.");
                 setStep(1);
             } else {
-                modifyMental(-15, '멀쩡한 환자를 의심하여 시간을 낭비하고 환자를 불쾌하게 했습니다.');
+                modifyMental(-5, '멀쩡한 환자를 의심하여 시간을 낭비하고 환자를 불쾌하게 했습니다.');
                 modifyReputation(-10);
                 onComplete(false); // Wrong choice, fail minigame
             }
@@ -72,11 +72,11 @@ const ABGAGame = ({ gameData, onComplete }) => {
             setFailCount(nextFail);
 
             if (nextFail >= 3) {
-                modifyMental(-20, 'ABGA 3회 연속 실패! 환자가 노발대발하여 더 이상 찌를 수 없습니다.');
+                modifyMental(-10, 'ABGA 3회 연속 실패! 환자가 노발대발하여 더 이상 찌를 수 없습니다.');
                 modifyReputation(-15);
                 alert("더 이상 환자가 채혈을 허락하지 않습니다! 동기 찬스를 사용해서 해결하세요.");
             } else {
-                modifyMental(-10, `맥이 약한 곳을 찔러 환자가 비명을 지릅니다!! (${nextFail}/3 실패)`);
+                modifyMental(-3, `맥이 약한 곳을 찔러 환자가 비명을 지릅니다!! (${nextFail}/3 실패)`);
                 modifyReputation(-5);
             }
         }

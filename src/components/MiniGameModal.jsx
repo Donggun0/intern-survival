@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useGameStore from '../store/gameStore';
 import DressingGame from './minigames/Dressing';
 import ConsentFormGame from './minigames/ConsentForm';
@@ -104,13 +104,13 @@ const MiniGameModal = () => {
                         <button
                             className="btn btn-danger"
                             onClick={() => {
-                                modifyMental(-15, '환자 클레임으로 멘탈이 크게 깎였습니다.');
+                                modifyMental(-5, '환자 클레임으로 멘탈이 크게 깎였습니다.');
                                 modifyReputation(-5);
                                 setShowAngryPatient(false);
                                 setApologized(true);
                             }}
                         >
-                            도게자 박기 (멘탈 -15, 평판 -5)
+                            도게자 박기 (멘탈 -5, 평판 -5)
                         </button>
                     </div>
                 ) : (
@@ -128,19 +128,25 @@ const MiniGameModal = () => {
 const CTKeepGame = ({ onComplete }) => {
     const [progress, setProgress] = useState(0);
 
+    const onCompleteRef = useRef(onComplete);
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setProgress(p => {
-                if (p >= 100) {
+                const next = p + 5;
+                if (next >= 100) {
                     clearInterval(interval);
-                    onComplete(true);
+                    if (onCompleteRef.current) onCompleteRef.current(true);
                     return 100;
                 }
-                return p + 5;
+                return next;
             });
         }, 1000);
         return () => clearInterval(interval);
-    }, [onComplete]);
+    }, []);
 
     return (
         <div style={{ padding: '30px', textAlign: 'center' }}>

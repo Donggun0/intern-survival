@@ -43,7 +43,7 @@ const BloodDrawGame = ({ gameData, onComplete }) => {
     const handleVerify = (action) => {
         if (action === 'proceed') {
             if (!orderPatientMatch) {
-                modifyMental(-30, '환자 확인 스킵! 엉뚱한 환자 피를 뽑았습니다. 평판과 멘탈 급감!');
+                modifyMental(-10, '환자 확인 스킵! 엉뚱한 환자 피를 뽑았습니다. 평판과 멘탈 급감!');
                 modifyReputation(-20);
                 onComplete(false); // fail minigame
             } else {
@@ -55,7 +55,7 @@ const BloodDrawGame = ({ gameData, onComplete }) => {
                 alert("이름표가 잘못된 것을 잡았습니다! 다시 오더를 확인합니다.");
                 setStep(1); // proceed with fixing it conceptually
             } else {
-                modifyMental(-5, '아무 문제 없는 환자인데 괜히 의심해서 시간을 낭비했습니다.');
+                modifyMental(-2, '아무 문제 없는 환자인데 괜히 의심해서 시간을 낭비했습니다.');
                 setStep(1);
             }
         }
@@ -64,7 +64,7 @@ const BloodDrawGame = ({ gameData, onComplete }) => {
     const handleVein = () => {
         if (!tourniquetApplied) {
             alert("토니켓(고무줄)을 먼저 묶어서 혈관을 부풀려주세요!");
-            modifyMental(-2, '지나가던 수간호사 선생님께 토니켓도 안 묶는다고 혼났습니다.');
+            modifyMental(-1, '지나가던 수간호사 선생님께 토니켓도 안 묶는다고 혼났습니다.');
             return;
         }
         setStep(2);
@@ -81,7 +81,7 @@ const BloodDrawGame = ({ gameData, onComplete }) => {
 
         if (!isCorrect) {
             alert("순서가 틀렸습니다!! (컬처-파-노-초-보)");
-            modifyMental(-10, '진단검사의학과에서 다시 뽑아오라고 전화가 왔습니다.');
+            modifyMental(-3, '진단검사의학과에서 다시 뽑아오라고 전화가 왔습니다.');
             modifyReputation(-5);
             onComplete(false);
             return;

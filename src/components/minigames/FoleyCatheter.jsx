@@ -21,7 +21,7 @@ const FoleyCatheterGame = ({ onComplete }) => {
 
     const handleInsert = () => {
         if (step === 0) {
-            modifyMental(-10, '무균 장갑도 안 끼고 소변줄을 넣다니! (감염 위험, 간호사 경악)');
+            modifyMental(-3, '무균 장갑도 안 끼고 소변줄을 넣다니! (감염 위험, 간호사 경악)');
             alert('무균 장갑을 먼저 껴주세요!');
             return;
         }
@@ -37,7 +37,7 @@ const FoleyCatheterGame = ({ onComplete }) => {
     const handleBalloon = () => {
         if (step < 3) {
             // Fatal mistake: ballooning inside the urethra
-            modifyMental(-50, '요도 안에서 펄룬을 터뜨렸습니다! 환자 요도 손상 (혈뇨 콸콸)');
+            modifyMental(-15, '요도 안에서 펄룬을 터뜨렸습니다! 환자 요도 손상 (혈뇨 콸콸)');
             modifyReputation(-50);
             alert('🚨 [응급] 방광에 닿기도 전에 벌룬을 해서 환자 요도가 파열되었습니다! 혈뇨파티! 평판/멘탈 폭락!');
             onComplete(true); // Game resolves but with massive penalty

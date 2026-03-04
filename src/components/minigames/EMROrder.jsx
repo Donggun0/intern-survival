@@ -55,8 +55,8 @@ const EMROrderGame = ({ onComplete }) => {
             }
         } else {
             // Wrong item penalty
-            modifyMental(-5, '잘못된 약을 처방할 뻔했습니다! (지도전문의에게 혼남)');
-            alert("틀렸습니다! 정신력 -5");
+            modifyMental(-2, '잘못된 약을 처방할 뻔했습니다! (지도전문의에게 혼남)');
+            alert("틀렸습니다! 정신력 -2");
         }
     };
 
