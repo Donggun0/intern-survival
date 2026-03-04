@@ -97,8 +97,8 @@ const PhoneOverlay = () => {
     if (activeEvent.type === 'PROFESSOR_ROUND' || activeEvent.eventType === 'PROFESSOR_ROUND') {
         const questionData = activeEvent.question || activeEvent.data;
         return (
-            <div className="overlay-screen" style={{ color: 'white', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
-                <div className="glass-panel vibrating modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: '#fffbeb', border: '2px solid #f59e0b', textAlign: 'center', opacity: canClick ? 1 : 0.7 }}>
+            <div className="overlay-screen" style={{ color: 'white', pointerEvents: 'auto' }}>
+                <div className="glass-panel vibrating modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: '#fffbeb', border: '2px solid #f59e0b', textAlign: 'center' }}>
                     <img src="professor_angry_1772544949836.png" alt="Angry Professor" style={{ height: '150px', margin: '0 auto 15px' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#b45309' }}>🔥 교수님 불시 회진! 🔥</h2>
                     <p style={{ marginBottom: '20px', fontSize: '1.1rem', fontWeight: 'bold', color: '#b45309' }}>"어이 인턴! {questionData.q}"</p>
@@ -123,7 +123,7 @@ const PhoneOverlay = () => {
     // Render for CPR
     if (activeEvent.type === 'CPR_CALL' || activeEvent.eventType === 'CPR') {
         return (
-            <div className="overlay-screen" style={{ backgroundColor: 'rgba(220, 38, 38, 0.8)', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
+            <div className="overlay-screen" style={{ backgroundColor: 'rgba(220, 38, 38, 0.8)', pointerEvents: 'auto' }}>
                 <div className="glass-panel vibrating modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '30px', backgroundColor: 'white', textAlign: 'center' }}>
                     <AlertTriangle size={64} color="#ef4444" style={{ margin: '0 auto 20px', animation: 'pulse 1s infinite' }} />
                     <h2 style={{ fontSize: '2rem', marginBottom: '10px', color: '#ef4444', fontWeight: 'bold' }}>CODE BLUE!</h2>
@@ -139,7 +139,7 @@ const PhoneOverlay = () => {
     // Render for SOS Result
     if (activeEvent.type === 'SOS_RESULT') {
         return (
-            <div className="overlay-screen" style={{ justifyContent: 'center', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
+            <div className="overlay-screen" style={{ justifyContent: 'center', pointerEvents: 'auto' }}>
                 <div className="glass-panel modal-content-animation" style={{ margin: '20px', padding: '30px', textAlign: 'center', borderRadius: '15px', backgroundColor: '#f8fafc' }}>
                     <img
                         src={activeEvent.success ? "sos_success_1772545635502.png" : "sos_fail_1772545620686.png"}
@@ -161,8 +161,8 @@ const PhoneOverlay = () => {
     // Render for Coworker Request
     if (activeEvent.type === 'COWORKER_REQUEST' || activeEvent.eventType === 'COWORKER_REQUEST') {
         return (
-            <div className="overlay-screen" style={{ opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
-                <div className="glass-panel modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center', opacity: canClick ? 1 : 0.8 }}>
+            <div className="overlay-screen" style={{ pointerEvents: 'auto' }}>
+                <div className="glass-panel modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center' }}>
                     <img src="coworker_crying_1772546833911.png" alt="Coworker" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '10px', color: '#3b82f6' }}>{activeEvent.caller}</h2>
                     <p style={{ fontSize: '1.1rem', marginBottom: '30px', fontWeight: 'bold' }}>"{activeEvent.message}"</p>
@@ -241,8 +241,8 @@ const PhoneOverlay = () => {
         const coffeePrice = 4500;
 
         return (
-            <div className="overlay-screen" style={{ opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
-                <div className="glass-panel modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: 'white', textAlign: 'center', opacity: canClick ? 1 : 0.8 }}>
+            <div className="overlay-screen" style={{ pointerEvents: 'auto' }}>
+                <div className="glass-panel modal-content-animation" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: 'white', textAlign: 'center' }}>
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#1f2937' }}>동기에게 부탁하기</h2>
                     <p style={{ marginBottom: '10px', fontSize: '1.1rem', color: '#4b5563' }}>어떤 방식으로 부탁하시겠습니까?</p>
                     <p style={{ marginBottom: '20px', fontSize: '0.9rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>내 주머니 사정: {wallet.toLocaleString()}원</p>
@@ -278,15 +278,14 @@ const PhoneOverlay = () => {
     }
 
     return (
-        <div className="overlay-screen" style={{ opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
+        <div className="overlay-screen" style={{ pointerEvents: 'auto' }}>
             <div
                 className="glass-panel vibrating modal-content-animation"
                 style={{
                     marginTop: 'auto', marginBottom: 'auto',
                     marginLeft: '20px', marginRight: '20px',
                     borderRadius: '20px', padding: '20px',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    opacity: canClick ? 1 : 0.8
+                    display: 'flex', flexDirection: 'column', alignItems: 'center'
                 }}
             >
                 <img src={callerImage} alt="Caller" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
