@@ -50,11 +50,12 @@ const ABGAGame = ({ gameData, onComplete }) => {
             }
         } else if (action === 'cancel') {
             if (!orderPatientMatch) {
-                alert("이름표가 잘못된 것을 잡았습니다! 다시 오더를 확인합니다.");
+                alert("이름표가 잘못된 것을 잡았습니다! 정확한 환자임을 확인하고 진행합니다.");
                 setStep(1);
             } else {
-                modifyMental(-5, '아무 문제 없는 환자인데 다시 확인하느라 시간을 낭비했습니다.');
-                setStep(1);
+                modifyMental(-15, '멀쩡한 환자를 의심하여 시간을 낭비하고 환자를 불쾌하게 했습니다.');
+                modifyReputation(-10);
+                onComplete(false); // Wrong choice, fail minigame
             }
         }
     };

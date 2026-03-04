@@ -232,7 +232,6 @@ body {
   backdrop-filter: blur(15px);
   /* Stronger blur */
   -webkit-backdrop-filter: blur(15px);
-  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
