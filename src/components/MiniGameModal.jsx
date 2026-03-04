@@ -35,7 +35,8 @@ const MiniGameModal = () => {
     const handleComplete = (success) => {
         if (success) {
             if (activeMiniGame.id) completeDuty(activeMiniGame.id);
-            modifyStamina(activeMiniGame.type ? -activeMiniGame.type.staminaCost : -10);
+            const staminaCost = activeMiniGame.type?.staminaCost || 10;
+            modifyStamina(-staminaCost);
         } else {
             // Penalty already applied loosely, but we can do extra
         }

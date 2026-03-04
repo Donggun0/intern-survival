@@ -134,6 +134,14 @@ function App() {
               <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{wallet.toLocaleString()}원</div>
             </div>
             <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>남은 체력</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{Math.floor(stamina) || 0}%</div>
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>남은 멘탈</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{Math.floor(mental) || 0}%</div>
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
               <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>지나온 시간</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{formatTime(time)}</div>
             </div>
@@ -145,10 +153,10 @@ function App() {
           style={{
             borderColor: 'white',
             color: 'white',
-            width: '100%',
-            maxWidth: '300px',
-            padding: '12px',
-            borderRadius: '15px',
+            width: '90%',
+            maxWidth: '400px',
+            padding: '10px',
+            borderRadius: '12px',
             fontSize: '1.1rem',
             fontWeight: 'bold',
             backgroundColor: 'rgba(255,255,255,0.1)'
@@ -223,12 +231,12 @@ function App() {
         <button
           className="btn btn-primary"
           style={{
-            marginTop: '20px',
-            width: '100%',
-            maxWidth: '300px',
-            padding: '15px',
-            borderRadius: '15px',
-            fontSize: '1.2rem',
+            marginTop: '15px',
+            width: '90%',
+            maxWidth: '400px',
+            padding: '12px',
+            borderRadius: '12px',
+            fontSize: '1.1rem',
             boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)'
           }}
           onClick={() => window.location.reload()}

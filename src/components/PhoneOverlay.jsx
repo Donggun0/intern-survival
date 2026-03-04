@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useGameStore from '../store/gameStore';
 import { Phone, PhoneOff, AlertTriangle } from 'lucide-react';
+import { DUTY_TYPES } from '../utils/dutyGenerator';
 
 const PhoneOverlay = () => {
     const { activeEvent, clearEvent, addDuty, modifyMental, modifyReputation, startMiniGame, isResting, toggleRest } = useGameStore();
@@ -92,7 +93,7 @@ const PhoneOverlay = () => {
 
     const handleStartCPR = () => {
         clearEvent();
-        startMiniGame({ patient: { name: 'Emergency' }, type: 'CPR' });
+        startMiniGame({ patient: { name: 'Emergency' }, type: DUTY_TYPES.CPR });
     };
 
     const handleRunAwayFromCPR = () => {

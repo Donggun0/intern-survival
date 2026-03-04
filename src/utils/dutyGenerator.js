@@ -20,6 +20,7 @@ export const DUTY_TYPES = {
     CT_KEEP: { id: 'CT_KEEP', name: 'CT 킵', type: 'wait', staminaCost: 20 },
     EMR_ORDER: { id: 'EMR_ORDER', name: 'EMR 오더 넣기', type: 'minigame', staminaCost: 5 },
     FOLEY_CATHETER: { id: 'FOLEY_CATHETER', name: '소변줄(Foley) 삽입', type: 'minigame', staminaCost: 15 },
+    CPR: { id: 'CPR', name: '심폐소생술 (CPR)', type: 'minigame', staminaCost: 30 },
 };
 
 // Types of events wrapper calling the duty
