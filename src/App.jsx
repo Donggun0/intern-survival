@@ -116,7 +116,7 @@ function App() {
         <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>GAME OVER</h1>
         <img src="grade_f_doctor_1772631419798.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px', borderRadius: '15px' }} />
         <p style={{ fontSize: '1.2rem', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '20px', borderRadius: '10px', maxWidth: '80%' }}>{gameOverReason}</p>
-        <button className="btn btn-outline" style={{ borderColor: 'white', color: 'white', marginTop: '30px', padding: '10px 20px', borderRadius: '15px' }} onClick={() => window.location.reload()}>다시 시작</button>
+        <button className="btn btn-outline" style={{ borderColor: 'white', color: 'white', mt: '15px', padding: '10px 20px', borderRadius: '15px' }} onClick={() => window.location.reload()}>다시 시작</button>
       </div>
     );
   }
@@ -180,7 +180,7 @@ function App() {
           </div>
         </div>
 
-        <button className="btn btn-primary" style={{ marginTop: '15px', width: '100%', maxWidth: '300px', padding: '10px 15px', borderRadius: '15px', fontSize: '1.1rem', boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
+        <button className="btn btn-primary" style={{ marginTop: '5px', width: '100%', maxWidth: '300px', padding: '10px 15px', borderRadius: '15px', fontSize: '1.1rem', boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
       </div>
     );
   }
