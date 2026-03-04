@@ -86,7 +86,9 @@ const MiniGameModal = () => {
             <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '15px', overflow: 'hidden', minHeight: '400px', display: 'flex', flexDirection: 'column', backgroundColor: 'white' }}>
                 <div style={{ padding: '15px', backgroundColor: 'var(--primary-color)', color: 'white', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
                     <span>{activeMiniGame.patient?.name || 'Emergency'} - {activeMiniGame.type?.name || activeMiniGame.type}</span>
-                    <button onClick={handleCancel} style={{ background: 'none', border: 'none', color: 'white', fontWeight: 'bold' }}>축소 (보류)</button>
+                    {(activeMiniGame.type?.id !== 'CPR' && activeMiniGame.type !== 'CPR') && (
+                        <button onClick={handleCancel} style={{ background: 'none', border: 'none', color: 'white', fontWeight: 'bold' }}>축소 (보류)</button>
+                    )}
                 </div>
 
                 {showAngryPatient ? (
