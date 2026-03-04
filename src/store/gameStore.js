@@ -18,6 +18,7 @@ const useGameStore = create((set, get) => ({
     activeMiniGame: null,
     activeEvent: null,
 
+    completedDutiesCount: 0,
     isResting: false,
     isCollapsed: false,
 
@@ -29,14 +30,16 @@ const useGameStore = create((set, get) => ({
         const newTime = state.time + 1;
         let nextState = { time: newTime };
 
-        // If resting, recover stamina
+        // If resting, recover stamina and mental
         if (state.isResting) {
-            nextState.stamina = Math.min(100, state.stamina + 3);
+            // Explicitly calculate new values to ensure both are updated even if one is at max
+            const staminaBonus = state.isCollapsed ? 4 : 3; // Recover slightly faster when collapsed
+            nextState.stamina = Math.min(100, state.stamina + staminaBonus);
             nextState.mental = Math.min(100, state.mental + 1);
         }
 
         // Recover from collapse
-        if (state.isCollapsed && (nextState.stamina || state.stamina) >= 30) {
+        if (state.isCollapsed && (nextState.stamina ?? state.stamina) >= 30) {
             nextState.isCollapsed = false;
         }
 
@@ -71,7 +74,8 @@ const useGameStore = create((set, get) => ({
 
     // Completing a duty
     completeDuty: (id) => set((state) => ({
-        duties: state.duties.filter(d => d.id !== id)
+        duties: state.duties.filter(d => d.id !== id),
+        completedDutiesCount: state.completedDutiesCount + 1
     })),
 
     // Modifying stats
@@ -87,15 +91,14 @@ const useGameStore = create((set, get) => ({
     modifyMental: (amount, reason = '') => set((state) => {
         const mental = Math.max(0, Math.min(100, state.mental + amount));
         if (mental === 0 && !state.gameOver) {
-            // Trigger game over on mental breakdown (or forced rest as per request)
-            return { mental, isResting: true };
+            // Trigger game over on mental breakdown
+            return { mental };
         }
         return { mental };
     }),
 
     modifyReputation: (amount) => set((state) => {
         const reputation = Math.max(0, Math.min(100, state.reputation + amount));
-        // Game Over logic is handled inside App.jsx based on reputation value
         return { reputation };
     }),
 
@@ -140,6 +143,7 @@ const useGameStore = create((set, get) => ({
             }
         });
     }
+
 }));
 
 export default useGameStore;

@@ -17,7 +17,7 @@ const MiniGameModal = () => {
     useEffect(() => {
         if (activeMiniGame) {
             setApologized(false);
-            setPatientImage(Math.random() > 0.5 ? "/patient_old_man_1772546877617.png" : "/patient_young_woman_1772546896900.png");
+            setPatientImage(Math.random() > 0.5 ? "patient_old_man_1772546877617.png" : "patient_young_woman_1772546896900.png");
         }
     }, [activeMiniGame?.id]);
 
@@ -145,7 +145,7 @@ const CTKeepGame = ({ onComplete }) => {
     return (
         <div style={{ padding: '30px', textAlign: 'center' }}>
             <AlertTriangle size={64} style={{ margin: '0 auto', color: 'var(--warning)', marginBottom: '20px' }} />
-            <img src="/ct_keep_1772545664550.png" alt="CT Keep" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '15px' }} />
+            <img src="ct_keep_1772545664550.png" alt="CT Keep" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '15px' }} />
             <h3 style={{ fontSize: '1.3rem', marginBottom: '10px' }}>CT 촬영 대기 중...</h3>
             <p style={{ color: 'var(--text-muted)', marginBottom: '5px' }}>환자 곁을 떠날 수 없습니다. 주변에서 엄청난 콜이 쏟아질 수 있습니다!</p>
             <p style={{ color: '#ef4444', marginBottom: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>⚠️ 방사선 보호장비도, 피폭선량계도 없이 맨몸으로 피폭당하는 중...</p>
@@ -195,7 +195,7 @@ const CPRGame = ({ onComplete }) => {
     return (
         <div style={{ padding: '30px', textAlign: 'center' }}>
             <AlertTriangle size={64} style={{ margin: '0 auto', color: 'var(--danger)', marginBottom: '20px' }} className="vibrating" />
-            <img src="/cpr_game_1772545649865.png" alt="CPR" style={{ height: '140px', margin: '0 auto 15px', borderRadius: '15px' }} />
+            <img src="cpr_game_1772545649865.png" alt="CPR" style={{ height: '140px', margin: '0 auto 15px', borderRadius: '15px' }} />
             <h3 style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'var(--danger)', fontWeight: 'bold' }}>심폐소생술 진행!</h3>
             <p style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>1분당 100~120회 일정한 박자로 가슴을 압박하세요!</p>
             <p style={{ minHeight: '24px', color: warning.includes('좋아') ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold', marginBottom: '20px' }}>{warning}</p>

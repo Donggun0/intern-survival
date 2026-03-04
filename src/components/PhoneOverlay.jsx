@@ -98,7 +98,7 @@ const PhoneOverlay = () => {
         return (
             <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', color: 'white', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
                 <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: '#fffbeb', border: '2px solid #f59e0b', textAlign: 'center' }}>
-                    <img src="/professor_angry_1772544949836.png" alt="Angry Professor" style={{ height: '150px', margin: '0 auto 15px' }} />
+                    <img src="professor_angry_1772544949836.png" alt="Angry Professor" style={{ height: '150px', margin: '0 auto 15px' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#b45309' }}>🔥 교수님 불시 회진! 🔥</h2>
                     <p style={{ marginBottom: '20px', fontSize: '1.1rem', fontWeight: 'bold', color: '#b45309' }}>"어이 인턴! {questionData.q}"</p>
 
@@ -141,7 +141,7 @@ const PhoneOverlay = () => {
             <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
                 <div className="glass-panel vibrating" style={{ margin: '20px', padding: '30px', textAlign: 'center', borderRadius: '15px', backgroundColor: '#f8fafc' }}>
                     <img
-                        src={activeEvent.success ? "/sos_success_1772545635502.png" : "/sos_fail_1772545620686.png"}
+                        src={activeEvent.success ? "sos_success_1772545635502.png" : "sos_fail_1772545620686.png"}
                         alt="SOS Result"
                         style={{ height: '180px', margin: '0 auto 15px' }}
                     />
@@ -162,7 +162,7 @@ const PhoneOverlay = () => {
         return (
             <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.75)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
                 <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center' }}>
-                    <img src="/coworker_crying_1772546833911.png" alt="Coworker" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
+                    <img src="coworker_crying_1772546833911.png" alt="Coworker" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '10px', color: '#3b82f6' }}>{activeEvent.caller}</h2>
                     <p style={{ fontSize: '1.1rem', marginBottom: '30px', fontWeight: 'bold' }}>"{activeEvent.message}"</p>
                     <div style={{ display: 'flex', width: '100%', gap: '15px' }}>
@@ -255,11 +255,11 @@ const PhoneOverlay = () => {
 
     // Render for Normal Phone Call
     // Select image based on caller
-    let callerImage = "/nurse_calling_1772544962823.png";
+    let callerImage = "nurse_calling_1772544962823.png";
     if (activeEvent.caller === "전공의 선생님") {
-        callerImage = "/resident_doctor_1772546848721.png";
+        callerImage = "resident_doctor_1772546848721.png";
     } else if (activeEvent.caller === "동기") {
-        callerImage = "/coworker_crying_1772546833911.png";
+        callerImage = "coworker_crying_1772546833911.png";
     }
 
     return (

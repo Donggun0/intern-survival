@@ -86,7 +86,7 @@ function App() {
     return (
       <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#7f1d1d', color: 'white' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>GAME OVER</h1>
-        <img src="/intern_tired_1772544933334.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px', filter: 'grayscale(100%)' }} />
+        <img src="intern_tired_1772544933334.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px', filter: 'grayscale(100%)' }} />
         <p style={{ fontSize: '1.2rem', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '20px', borderRadius: '10px' }}>{gameOverReason}</p>
         <button className="btn btn-outline" style={{ borderColor: 'white', color: 'white', marginTop: '30px' }} onClick={() => window.location.reload()}>다시 시작</button>
       </div>
@@ -94,21 +94,65 @@ function App() {
   }
 
   if (dayComplete) {
+    const { completedDutiesCount } = useGameStore.getState();
+    const totalScore = reputation + (completedDutiesCount * 2);
+
+    const getGrade = (score) => {
+      if (score >= 120) return { grade: 'S', color: '#fcd34d', label: '전설의 인턴' };
+      if (score >= 100) return { grade: 'A', color: '#60a5fa', label: '에이스 인턴' };
+      if (score >= 80) return { grade: 'B', color: '#34d399', label: '성실한 인턴' };
+      if (score >= 60) return { grade: 'C', color: '#fbbf24', label: '보통의 인턴' };
+      if (score >= 40) return { grade: 'D', color: '#f87171', label: '위태로운 인턴' };
+      return { grade: 'F', color: '#ef4444', label: '자퇴 권고' };
+    };
+
+    const result = getGrade(totalScore);
+
     return (
       <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#065f46', color: 'white' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>퇴근 시간!</h1>
-        <img src="/intern_tired_1772544933334.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px' }} />
-        <div style={{ backgroundColor: 'rgba(0,0,0,0.5)', padding: '20px', borderRadius: '10px', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>오늘 하루도 무사히 버티셨습니다.</p>
-          <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning)' }}>남은 평판: {reputation}</p>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>퇴근 시간!</h1>
+        <p style={{ fontSize: '1.2rem', marginBottom: '20px', opacity: 0.9 }}>수고하셨습니다. 오늘의 업무 평가 결과입니다.</p>
+
+        <div className="glass-panel" style={{ width: '90%', maxWidth: '400px', padding: '30px', borderRadius: '20px', textAlign: 'center', color: 'black', backgroundColor: 'rgba(255,255,255,0.95)' }}>
+          <div style={{ fontSize: '5rem', fontWeight: 'bold', color: result.color, lineHeight: '1', marginBottom: '10px', textShadow: '2px 2px 4px rgba(0,0,0,0.1)' }}>
+            {result.grade}
+          </div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '25px', color: '#1f2937' }}>
+            {result.label}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', textAlign: 'left', marginBottom: '25px' }}>
+            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>최종 평판</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{reputation}점</div>
+            </div>
+            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>완료한 업무</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#059669' }}>{completedDutiesCount}개</div>
+            </div>
+            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>남은 체력</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#dc2626' }}>{stamina}%</div>
+            </div>
+            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>남은 멘탈</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2563eb' }}>{mental}%</div>
+            </div>
+          </div>
+
+          <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px' }}>
+            <span style={{ fontSize: '0.9rem', color: '#6b7280' }}>종합 점수: </span>
+            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827' }}>{totalScore}점</span>
+          </div>
         </div>
-        <button className="btn btn-primary" style={{ marginTop: '30px' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
+
+        <button className="btn btn-primary" style={{ marginTop: '30px', padding: '12px 40px', fontSize: '1.1rem' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
       </div>
     );
   }
 
   return (
-    <div className={`app-container ${isResting ? '' : ''}`} style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url("/hospital_ward_bg_1772544979145.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className={`app-container ${isResting ? '' : ''}`} style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url("hospital_ward_bg_1772544979145.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       {/* Top Bar Stats */}
       <div className="top-bar glass-panel">
         <div className="time-display" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', lineHeight: '1.2' }}>
@@ -121,7 +165,7 @@ function App() {
           <HeartPulse size={16} className="text-success" />
           <span className="stat-label">체력</span>
           <div className="progress-bar-container">
-            <div className="progress-bar-fill fill-stamina" style={{ width: `${stamina}%` }}></div>
+            <div className={`progress-bar-fill fill-stamina ${isResting && stamina < 100 ? 'recovering' : ''}`} style={{ width: `${stamina}%` }}></div>
           </div>
         </div>
 
@@ -129,7 +173,7 @@ function App() {
           <Brain size={16} className="text-blue-500" />
           <span className="stat-label">멘탈</span>
           <div className="progress-bar-container">
-            <div className="progress-bar-fill fill-mental" style={{ width: `${mental}%` }}></div>
+            <div className={`progress-bar-fill fill-mental ${isResting && mental < 100 ? 'recovering' : ''}`} style={{ width: `${mental}%` }}></div>
           </div>
         </div>
 
@@ -182,7 +226,7 @@ function App() {
             animation: 'pulse 2s infinite'
           }}
         >
-          <img src="/snack_coffee_1772546862979.png" alt="Coffee and Snack" style={{ width: '80px', height: '80px', filter: 'drop-shadow(0px 10px 8px rgba(0,0,0,0.3))' }} />
+          <img src="snack_coffee_1772546862979.png" alt="Coffee and Snack" style={{ width: '80px', height: '80px', filter: 'drop-shadow(0px 10px 8px rgba(0,0,0,0.3))' }} />
         </div>
       )}
 

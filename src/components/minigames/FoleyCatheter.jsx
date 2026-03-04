@@ -107,7 +107,7 @@ const FoleyCatheterGame = ({ onComplete }) => {
                     onClick={handleWearGloves}
                     disabled={step >= 1}
                 >
-                    <img src="/sterile_gloves_1772547392717.png" alt="Gloves" style={{ height: '30px', marginBottom: '5px' }} />
+                    <img src="sterile_gloves_1772547392717.png" alt="Gloves" style={{ height: '30px', marginBottom: '5px' }} />
                     <br />1. 멸균 장갑 착용
                 </button>
 
@@ -117,7 +117,7 @@ const FoleyCatheterGame = ({ onComplete }) => {
                     onClick={handleInsert}
                     disabled={step >= 3}
                 >
-                    <img src="/foley_catheter_1772547379242.png" alt="Catheter" style={{ height: '30px', marginBottom: '5px' }} />
+                    <img src="foley_catheter_1772547379242.png" alt="Catheter" style={{ height: '30px', marginBottom: '5px' }} />
                     <br />2. 소변줄 밀어넣기
                 </button>
 
@@ -127,7 +127,7 @@ const FoleyCatheterGame = ({ onComplete }) => {
                     onClick={handleBalloon}
                     disabled={step === 4}
                 >
-                    <img src="/syringe_water_1772547424432.png" alt="Syringe" style={{ height: '30px', marginBottom: '5px' }} />
+                    <img src="syringe_water_1772547424432.png" alt="Syringe" style={{ height: '30px', marginBottom: '5px' }} />
                     <br />3. Ballooning (증류수 주입)
                 </button>
             </div>
@@ -141,7 +141,7 @@ const FoleyCatheterGame = ({ onComplete }) => {
             </div>
 
             {urineVisible && step < 4 && (
-                <img src="/urine_bag_1772547408015.png" alt="Urine Bag" style={{ position: 'absolute', bottom: '20px', right: '20px', height: '60px', opacity: 0.8, animation: 'bounce 2s infinite' }} />
+                <img src="urine_bag_1772547408015.png" alt="Urine Bag" style={{ position: 'absolute', bottom: '20px', right: '20px', height: '60px', opacity: 0.8, animation: 'bounce 2s infinite' }} />
             )}
         </div>
     );
