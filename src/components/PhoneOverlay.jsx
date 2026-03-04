@@ -95,6 +95,13 @@ const PhoneOverlay = () => {
         startMiniGame({ patient: { name: 'Emergency' }, type: 'CPR' });
     };
 
+    const handleRunAwayFromCPR = () => {
+        modifyReputation(-30);
+        modifyMental(-10, '사람을 살릴 기회를 저버렸다는 죄책감과 뒷담화가 들려옵니다...');
+        alert("CPR 현장에서 도망쳤습니다! 병동에 인턴이 도망갔다는 소문이 쫙 퍼져 평판이 대폭 하락합니다. (평판 -30)");
+        clearEvent();
+    };
+
     // Render for Professor Round
     if (activeEvent.type === 'PROFESSOR_ROUND' || activeEvent.eventType === 'PROFESSOR_ROUND') {
         const questionData = activeEvent.question || activeEvent.data;
@@ -130,8 +137,15 @@ const PhoneOverlay = () => {
                     <AlertTriangle size={64} color="#ef4444" style={{ margin: '0 auto 20px', animation: 'pulse 1s infinite' }} />
                     <h2 style={{ fontSize: '2rem', marginBottom: '10px', color: '#ef4444', fontWeight: 'bold' }}>CODE BLUE!</h2>
                     <p style={{ fontSize: '1.2rem', marginBottom: '30px', fontWeight: 'bold', color: '#1f2937' }}>병동에서 심정지 환자 발생!! 즉시 뛰어오세요!</p>
-                    <button className="btn btn-danger" style={{ width: '100%', padding: '20px', fontSize: '1.5rem', fontWeight: 'bold', cursor: canClick ? 'pointer' : 'default', opacity: canClick ? 1 : 0.7 }} onClick={canClick ? handleStartCPR : null}>
+                    <button className="btn btn-danger" style={{ width: '100%', padding: '20px', fontSize: '1.5rem', fontWeight: 'bold', cursor: canClick ? 'pointer' : 'default', opacity: canClick ? 1 : 0.7, marginBottom: '15px' }} onClick={canClick ? handleStartCPR : null}>
                         달려가기 (CPR 시작)
+                    </button>
+                    <button
+                        className="btn btn-outline"
+                        style={{ width: '100%', padding: '10px', fontSize: '1rem', color: '#6b7280', borderColor: '#d1d5db', cursor: canClick ? 'pointer' : 'default' }}
+                        onClick={canClick ? handleRunAwayFromCPR : null}
+                    >
+                        몰래 도망치기 (평판 -30)
                     </button>
                 </div>
             </div>
