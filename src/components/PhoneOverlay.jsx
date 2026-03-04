@@ -140,7 +140,7 @@ const PhoneOverlay = () => {
     if (activeEvent.type === 'SOS_RESULT') {
         return (
             <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
-                <div className="glass-panel vibrating" style={{ margin: '20px', padding: '30px', textAlign: 'center', borderRadius: '15px', backgroundColor: '#f8fafc' }}>
+                <div className="glass-panel" style={{ margin: '20px', padding: '30px', textAlign: 'center', borderRadius: '15px', backgroundColor: '#f8fafc' }}>
                     <img
                         src={activeEvent.success ? "sos_success_1772545635502.png" : "sos_fail_1772545620686.png"}
                         alt="SOS Result"
@@ -162,7 +162,7 @@ const PhoneOverlay = () => {
     if (activeEvent.type === 'COWORKER_REQUEST' || activeEvent.eventType === 'COWORKER_REQUEST') {
         return (
             <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.75)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
-                <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center' }}>
+                <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center' }}>
                     <img src="coworker_crying_1772546833911.png" alt="Coworker" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '10px', color: '#3b82f6' }}>{activeEvent.caller}</h2>
                     <p style={{ fontSize: '1.1rem', marginBottom: '30px', fontWeight: 'bold' }}>"{activeEvent.message}"</p>
@@ -233,7 +233,7 @@ const PhoneOverlay = () => {
 
         return (
             <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.8)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
-                <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: 'white', textAlign: 'center' }}>
+                <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: 'white', textAlign: 'center' }}>
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#1f2937' }}>동기에게 부탁하기</h2>
                     <p style={{ marginBottom: '20px', fontSize: '1.1rem', color: '#4b5563' }}>어떤 방식으로 부탁하시겠습니까?</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
