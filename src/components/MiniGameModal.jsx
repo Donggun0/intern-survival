@@ -22,7 +22,8 @@ const MiniGameModal = () => {
     }, [activeMiniGame?.id]);
 
     useEffect(() => {
-        if (activeMiniGame && !apologized && (activeMiniGame.missedCall || (time - activeMiniGame.createdAt > 40))) {
+        const typeId = activeMiniGame?.type?.id || activeMiniGame?.type;
+        if (activeMiniGame && typeId !== 'EMR_ORDER' && typeId !== 'CT_KEEP' && typeId !== 'CPR' && !apologized && (activeMiniGame.missedCall || (time - activeMiniGame.createdAt > 40))) {
             setShowAngryPatient(true);
         } else {
             setShowAngryPatient(false);
@@ -185,6 +186,7 @@ const CPRGame = ({ onComplete }) => {
                 modifyReputation(-1);
             } else {
                 setWarning("좋아, 그 페이스 유지해!");
+                modifyReputation(0.5); // 정확한 박자에 맞출 때마다 평판 0.5씩 소폭 상승
             }
         }
         setLastPressTime(now);

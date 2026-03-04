@@ -77,7 +77,8 @@ const useGameStore = create((set, get) => ({
     completeDuty: (id) => set((state) => ({
         duties: state.duties.filter(d => d.id !== id),
         completedDutiesCount: state.completedDutiesCount + 1,
-        mental: Math.min(100, state.mental + 6) // More satisfaction
+        mental: Math.min(100, state.mental + 6), // More satisfaction
+        reputation: Math.min(100, state.reputation + 2) // Bonus rep for finishing duty
     })),
 
     modifyStamina: (amount) => set((state) => {
