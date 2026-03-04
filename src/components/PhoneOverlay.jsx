@@ -81,9 +81,11 @@ const PhoneOverlay = () => {
         if (isCorrect) {
             modifyReputation(10);
             modifyMental(8, '교수님의 질문에 완벽히 대답했습니다! 칭찬을 받았습니다.');
+            alert("정답입니다! 칭찬을 받아 평판과 멘탈이 올랐습니다.");
         } else {
             modifyReputation(-10);
             modifyMental(-10, '교수님께 영혼까지 털렸습니다...');
+            alert("틀렸습니다... 교수님께 혼나서 멘탈과 평판이 깎였습니다.");
         }
         clearEvent();
     };

@@ -58,12 +58,18 @@ function App() {
           coworkerProb = 0;
         }
 
+        // Silence professor during CT keep
+        const isCtKeepRunning = currentState.activeMiniGame?.type?.id === 'CT_KEEP';
+        if (isCtKeepRunning) {
+          profProb = 0;
+        }
+
         if (rand < callProb) {
           const newDuty = generateDuty();
           triggerEvent(generatePhoneCallEvent(newDuty));
-        } else if (rand > (1 - cprProb) && !isCprRunning && currentState.activeMiniGame?.type?.id !== 'CT_KEEP') {
+        } else if (rand > (1 - cprProb) && !isCprRunning && !isCtKeepRunning) {
           triggerEvent(generateCPREvent());
-        } else if (rand > (1 - cprProb - profProb) && currentState.activeMiniGame && currentState.activeMiniGame.type?.id !== 'CPR') {
+        } else if (rand > (1 - cprProb - profProb) && currentState.activeMiniGame && currentState.activeMiniGame.type?.id !== 'CPR' && !isCtKeepRunning) {
           triggerEvent(generateProfessorRound());
         } else if (rand > (1 - cprProb - profProb - coworkerProb)) {
           triggerEvent(generateCoworkerRequestEvent());
@@ -140,40 +146,40 @@ function App() {
           <div style={{ fontSize: '4.5rem', fontWeight: 'bold', color: result.color, lineHeight: '1', marginBottom: '5px' }}>
             {result.grade}
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 'bold', marginBottom: '20px', color: '#1f2937' }}>
+          <div style={{ fontSize: '1.6rem', fontWeight: 'bold', marginBottom: '15px', color: '#1f2937' }}>
             {result.label}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'left', marginBottom: '20px' }}>
-            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', textAlign: 'left', marginBottom: '15px' }}>
+            <div style={{ padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>최종 평판</div>
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{Math.floor(reputation)}점</div>
             </div>
-            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+            <div style={{ padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>업무 완수</div>
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#059669' }}>{completedDutiesCount}건</div>
             </div>
-            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+            <div style={{ padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 체력</div>
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#dc2626' }}>{Math.floor(stamina)}%</div>
             </div>
-            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+            <div style={{ padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 잔액</div>
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#b45309' }}>{wallet.toLocaleString()}원</div>
             </div>
-            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+            <div style={{ padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 멘탈</div>
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2563eb' }}>{Math.floor(mental)}%</div>
             </div>
           </div>
 
-          <div style={{ borderTop: '2px dashed #e5e7eb', paddingTop: '15px' }}>
+          <div style={{ borderTop: '2px dashed #e5e7eb', paddingTop: '10px' }}>
             <span style={{ fontSize: '1rem', color: '#6b7280' }}>총합 점수: </span>
             <span style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827' }}>{Math.floor(totalScore)}점</span>
           </div>
         </div>
 
-        <button className="btn btn-primary" style={{ marginTop: '25px', width: '100%', maxWidth: '300px', padding: '15px', borderRadius: '15px', fontSize: '1.2rem', boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
+        <button className="btn btn-primary" style={{ marginTop: '15px', width: '100%', maxWidth: '300px', padding: '15px', borderRadius: '15px', fontSize: '1.2rem', boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
       </div>
     );
   }
