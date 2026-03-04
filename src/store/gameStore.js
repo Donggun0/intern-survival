@@ -37,7 +37,7 @@ const useGameStore = create((set, get) => ({
             nextState.mental = Math.min(100, state.mental + 1.5); // Slightly faster recovery
         } else {
             // Natural mental drain even when not resting
-            nextState.mental = Math.max(0, state.mental - 0.05); // Reduced from 0.1
+            nextState.mental = Math.max(0, state.mental - 0.07); // Slightly faster (was 0.05)
         }
 
         if (state.isCollapsed && (nextState.stamina ?? state.stamina) >= 40) {
@@ -47,11 +47,11 @@ const useGameStore = create((set, get) => ({
         let rep = state.reputation;
         if (state.duties.length >= 4 && newTime % 4 === 0) {
             rep -= 1.0;
-            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.1); // Reduced stress
+            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.2); // Increased stress (was 0.1)
         }
         if (state.duties.length > 0 && (newTime - state.duties[0].createdAt) > 45 && newTime % 8 === 0) {
             rep -= 1.0;
-            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.1);
+            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.15); // Slightly more stress (was 0.1)
         }
 
         if (rep !== state.reputation) {
@@ -98,7 +98,7 @@ const useGameStore = create((set, get) => ({
         const reputation = Math.max(0, Math.min(100, state.reputation + amount));
         let mentalUpdate = {};
         if (amount < 0) {
-            mentalUpdate.mental = Math.max(0, state.mental + (amount * 0.4)); // Reduced impact from 0.8
+            mentalUpdate.mental = Math.max(0, state.mental + (amount * 0.55)); // Increased impact (was 0.4)
         }
         return { reputation, ...mentalUpdate };
     }),

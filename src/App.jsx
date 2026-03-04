@@ -111,12 +111,52 @@ function App() {
   };
 
   if (gameOver) {
+    const { completedDutiesCount } = useGameStore.getState();
     return (
-      <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#7f1d1d', color: 'white' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>GAME OVER</h1>
-        <img src="grade_f_doctor_1772631419798.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px', borderRadius: '15px' }} />
-        <p style={{ fontSize: '1.2rem', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '20px', borderRadius: '10px', maxWidth: '80%' }}>{gameOverReason}</p>
-        <button className="btn btn-outline" style={{ borderColor: 'white', color: 'white', mt: '15px', padding: '10px 20px', borderRadius: '15px' }} onClick={() => window.location.reload()}>다시 시작</button>
+      <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#7f1d1d', color: 'white', padding: '20px' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>GAME OVER</h1>
+        <img src="grade_f_doctor_1772631419798.png" alt="Tired Intern" style={{ height: '160px', marginBottom: '15px', borderRadius: '15px' }} />
+
+        <div className="glass-panel" style={{ width: '100%', maxWidth: '380px', padding: '20px', borderRadius: '20px', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.95)', color: 'black', marginBottom: '20px' }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#7f1d1d', marginBottom: '15px' }}>{gameOverReason}</p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', textAlign: 'left' }}>
+            <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>최종 평판</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{Math.floor(reputation)}점</div>
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>완수한 업무</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{completedDutiesCount}건</div>
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>보유 잔액</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{wallet.toLocaleString()}원</div>
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#fee2e2', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#991b1b' }}>지나온 시간</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{formatTime(time)}</div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          className="btn btn-outline"
+          style={{
+            borderColor: 'white',
+            color: 'white',
+            width: '100%',
+            maxWidth: '300px',
+            padding: '12px',
+            borderRadius: '15px',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            backgroundColor: 'rgba(255,255,255,0.1)'
+          }}
+          onClick={() => window.location.reload()}
+        >
+          처음부터 다시 도전
+        </button>
       </div>
     );
   }
@@ -180,7 +220,21 @@ function App() {
           </div>
         </div>
 
-        <button className="btn btn-primary" style={{ marginTop: '5px', width: '100%', maxWidth: '300px', padding: '10px 15px', borderRadius: '15px', fontSize: '1.1rem', boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
+        <button
+          className="btn btn-primary"
+          style={{
+            marginTop: '20px',
+            width: '100%',
+            maxWidth: '300px',
+            padding: '15px',
+            borderRadius: '15px',
+            fontSize: '1.2rem',
+            boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)'
+          }}
+          onClick={() => window.location.reload()}
+        >
+          새로운 아침 맞이하기
+        </button>
       </div>
     );
   }
