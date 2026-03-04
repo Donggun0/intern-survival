@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import useGameStore from './store/gameStore';
-import { HeartPulse, Brain, Trophy, Coffee, Users } from 'lucide-react';
+import { HeartPulse, Brain, Trophy, Coffee, Users, Coins } from 'lucide-react';
 import DutyList from './components/DutyList';
 import PhoneOverlay from './components/PhoneOverlay';
 import MiniGameModal from './components/MiniGameModal';
@@ -14,13 +14,14 @@ const formatTime = (minutes) => {
 
 function App() {
   const {
-    time, stamina, mental, reputation,
+    time, stamina, mental, reputation, wallet,
     tick, isResting, toggleRest, useSos, gameOver, gameOverReason, dayComplete,
-    activeEvent, triggerEvent, activeMiniGame, duties, addDuty, modifyStamina, modifyMental,
+    activeEvent, triggerEvent, activeMiniGame, duties, addDuty, modifyStamina, modifyMental, modifyWallet,
     isShiftEnding, finishDay
   } = useGameStore();
 
   const [snackActive, setSnackActive] = React.useState(false);
+  const [coinActive, setCoinActive] = React.useState(false);
   const tickRef = useRef(tick);
   tickRef.current = tick;
 
@@ -41,17 +42,26 @@ function App() {
       if (!currentState.activeEvent && !currentState.gameOver && !currentState.dayComplete && !currentState.isShiftEnding) {
         const rand = Math.random();
         const isLunchTime = time >= 12 * 60 && time <= 13 * 60;
+        const isCprRunning = currentState.activeMiniGame?.type?.id === 'CPR' || currentState.activeMiniGame?.type === 'CPR';
 
-        // Base probabilities increased for higher difficulty
-        const callProb = isLunchTime ? 0.04 : 0.08;
-        const cprProb = 0.02;
-        const profProb = isLunchTime ? 0.02 : 0.01;
-        const coworkerProb = isLunchTime ? 0.03 : 0.02;
+        // Base probabilities slightly reduced for better pacing
+        let callProb = isLunchTime ? 0.03 : 0.05;
+        let cprProb = 0.015;
+        let profProb = isLunchTime ? 0.02 : 0.01;
+        let coworkerProb = isLunchTime ? 0.02 : 0.015;
+
+        // Silence during CPR: CPR focus is intense
+        if (isCprRunning) {
+          callProb = 0.005; // Almost no calls during CPR
+          cprProb = 0;      // No duplicate CPR
+          profProb = 0;     // Professor won't disturb during life-saving
+          coworkerProb = 0;
+        }
 
         if (rand < callProb) {
           const newDuty = generateDuty();
           triggerEvent(generatePhoneCallEvent(newDuty));
-        } else if (rand > (1 - cprProb) && currentState.activeMiniGame?.type?.id !== 'CT_KEEP') {
+        } else if (rand > (1 - cprProb) && !isCprRunning && currentState.activeMiniGame?.type?.id !== 'CT_KEEP') {
           triggerEvent(generateCPREvent());
         } else if (rand > (1 - cprProb - profProb) && currentState.activeMiniGame && currentState.activeMiniGame.type?.id !== 'CPR') {
           triggerEvent(generateProfessorRound());
@@ -60,6 +70,10 @@ function App() {
         } else if (rand > 0.940 && !snackActive) {
           setSnackActive(true);
           setTimeout(() => setSnackActive(false), 6000);
+        } else if (rand > 0.920 && !coinActive && !currentState.isResting) {
+          // Found some money on the ground!
+          setCoinActive(true);
+          setTimeout(() => setCoinActive(false), 5000);
         }
       }
 
@@ -75,12 +89,18 @@ function App() {
 
     }, 500); // 0.5 real second = 1 game minute (Total 5 mins for 10 hours)
     return () => clearInterval(timer);
-  }, [triggerEvent, time, duties.length, addDuty, snackActive]);
+  }, [triggerEvent, time, duties.length, addDuty, snackActive, coinActive]);
 
   const handleSnackClick = () => {
-    modifyStamina(20);
+    modifyStamina(25);
     modifyMental(10, '달콤한 간식으로 에너지를 충전했습니다!');
     setSnackActive(false);
+  };
+
+  const handleCoinClick = () => {
+    const amount = Math.floor(Math.random() * 500) + 100; // 100~600 won
+    modifyWallet(amount);
+    setCoinActive(false);
   };
 
   if (gameOver) {
@@ -138,6 +158,10 @@ function App() {
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#dc2626' }}>{Math.floor(stamina)}%</div>
             </div>
             <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 잔액</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#b45309' }}>{wallet.toLocaleString()}원</div>
+            </div>
+            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 멘탈</div>
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2563eb' }}>{Math.floor(mental)}%</div>
             </div>
@@ -164,27 +188,35 @@ function App() {
           {time >= 12 * 60 && time < 13 * 60 && <span style={{ fontSize: '0.8rem', color: '#b45309', fontWeight: 'bold' }}>(점심시간)</span>}
         </div>
 
-        <div className="stat-row">
-          <HeartPulse size={16} className="text-success" />
-          <span className="stat-label">체력</span>
-          <div className="progress-bar-container">
-            <div className={`progress-bar-fill fill-stamina ${isResting && stamina < 100 ? 'recovering' : ''}`} style={{ width: `${stamina}%` }}></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+          <div className="stat-row">
+            <HeartPulse size={16} className="text-success" />
+            <span className="stat-label">체력</span>
+            <div className="progress-bar-container">
+              <div className={`progress-bar-fill fill-stamina ${isResting && stamina < 100 ? 'recovering' : ''}`} style={{ width: `${stamina}%` }}></div>
+            </div>
           </div>
-        </div>
 
-        <div className="stat-row">
-          <Brain size={16} className="text-blue-500" />
-          <span className="stat-label">멘탈</span>
-          <div className="progress-bar-container">
-            <div className={`progress-bar-fill fill-mental ${isResting && mental < 100 ? 'recovering' : ''}`} style={{ width: `${mental}%` }}></div>
+          <div className="stat-row">
+            <Brain size={16} className="text-blue-500" />
+            <span className="stat-label">멘탈</span>
+            <div className="progress-bar-container">
+              <div className={`progress-bar-fill fill-mental ${isResting && mental < 100 ? 'recovering' : ''}`} style={{ width: `${mental}%` }}></div>
+            </div>
           </div>
-        </div>
 
-        <div className="stat-row">
-          <Trophy size={16} className="text-warning" />
-          <span className="stat-label">평판</span>
-          <div className="progress-bar-container">
-            <div className="progress-bar-fill fill-reputation" style={{ width: `${reputation}%` }}></div>
+          <div className="stat-row">
+            <Trophy size={16} className="text-warning" />
+            <span className="stat-label">평판</span>
+            <div className="progress-bar-container">
+              <div className="progress-bar-fill fill-reputation" style={{ width: `${reputation}%` }}></div>
+            </div>
+          </div>
+
+          <div className="stat-row">
+            <Coins size={16} style={{ color: '#b45309' }} />
+            <span className="stat-label">지갑</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>{wallet.toLocaleString()}원</span>
           </div>
         </div>
       </div>
@@ -230,6 +262,24 @@ function App() {
           }}
         >
           <img src="snack_coffee_1772546862979.png" alt="Coffee and Snack" style={{ width: '80px', height: '80px', filter: 'drop-shadow(0px 10px 8px rgba(0,0,0,0.3))' }} />
+        </div>
+      )}
+
+      {/* Floating Coin Interaction */}
+      {coinActive && !gameOver && !dayComplete && !activeEvent && (
+        <div
+          onClick={handleCoinClick}
+          className="vibrating"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '10%',
+            zIndex: 40,
+            cursor: 'pointer',
+            animation: 'pulse 1s infinite'
+          }}
+        >
+          <img src="korean_coin_won_1772632726173.png" alt="Found Coin" style={{ width: '60px', height: '60px', filter: 'drop-shadow(0px 5px 5px rgba(0,0,0,0.3))' }} />
         </div>
       )}
 

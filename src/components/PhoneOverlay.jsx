@@ -97,8 +97,8 @@ const PhoneOverlay = () => {
     if (activeEvent.type === 'PROFESSOR_ROUND' || activeEvent.eventType === 'PROFESSOR_ROUND') {
         const questionData = activeEvent.question || activeEvent.data;
         return (
-            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', color: 'white', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
-                <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: '#fffbeb', border: '2px solid #f59e0b', textAlign: 'center' }}>
+            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', color: 'white', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
+                <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: '#fffbeb', border: '2px solid #f59e0b', textAlign: 'center', opacity: canClick ? 1 : 0.7 }}>
                     <img src="professor_angry_1772544949836.png" alt="Angry Professor" style={{ height: '150px', margin: '0 auto 15px' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#b45309' }}>🔥 교수님 불시 회진! 🔥</h2>
                     <p style={{ marginBottom: '20px', fontSize: '1.1rem', fontWeight: 'bold', color: '#b45309' }}>"어이 인턴! {questionData.q}"</p>
@@ -108,8 +108,8 @@ const PhoneOverlay = () => {
                             <button
                                 key={idx}
                                 className="btn btn-outline"
-                                style={{ textAlign: 'left', padding: '15px', borderColor: '#d97706', color: '#92400e' }}
-                                onClick={() => handleProfessorSubmit(idx === (questionData.a !== undefined ? questionData.a : questionData.correct))}
+                                style={{ textAlign: 'left', padding: '15px', borderColor: '#d97706', color: '#92400e', cursor: canClick ? 'pointer' : 'default' }}
+                                onClick={canClick ? () => handleProfessorSubmit(idx === (questionData.a !== undefined ? questionData.a : questionData.correct)) : null}
                             >
                                 {opt}
                             </button>
@@ -123,12 +123,12 @@ const PhoneOverlay = () => {
     // Render for CPR
     if (activeEvent.type === 'CPR_CALL' || activeEvent.eventType === 'CPR') {
         return (
-            <div className="overlay-screen" style={{ backgroundColor: 'rgba(220, 38, 38, 0.9)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
+            <div className="overlay-screen" style={{ backgroundColor: 'rgba(220, 38, 38, 0.9)', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
                 <div className="glass-panel vibrating" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '30px', backgroundColor: 'white', textAlign: 'center' }}>
                     <AlertTriangle size={64} color="#ef4444" style={{ margin: '0 auto 20px', animation: 'pulse 1s infinite' }} />
                     <h2 style={{ fontSize: '2rem', marginBottom: '10px', color: '#ef4444', fontWeight: 'bold' }}>CODE BLUE!</h2>
                     <p style={{ fontSize: '1.2rem', marginBottom: '30px', fontWeight: 'bold', color: '#1f2937' }}>병동에서 심정지 환자 발생!! 즉시 뛰어오세요!</p>
-                    <button className="btn btn-danger" style={{ width: '100%', padding: '20px', fontSize: '1.5rem', fontWeight: 'bold' }} onClick={handleStartCPR}>
+                    <button className="btn btn-danger" style={{ width: '100%', padding: '20px', fontSize: '1.5rem', fontWeight: 'bold', cursor: canClick ? 'pointer' : 'default', opacity: canClick ? 1 : 0.7 }} onClick={canClick ? handleStartCPR : null}>
                         달려가기 (CPR 시작)
                     </button>
                 </div>
@@ -139,7 +139,7 @@ const PhoneOverlay = () => {
     // Render for SOS Result
     if (activeEvent.type === 'SOS_RESULT') {
         return (
-            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
+            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
                 <div className="glass-panel" style={{ margin: '20px', padding: '30px', textAlign: 'center', borderRadius: '15px', backgroundColor: '#f8fafc' }}>
                     <img
                         src={activeEvent.success ? "sos_success_1772545635502.png" : "sos_fail_1772545620686.png"}
@@ -161,16 +161,16 @@ const PhoneOverlay = () => {
     // Render for Coworker Request
     if (activeEvent.type === 'COWORKER_REQUEST' || activeEvent.eventType === 'COWORKER_REQUEST') {
         return (
-            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.75)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
-                <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center' }}>
+            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.75)', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
+                <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '20px', padding: '20px', textAlign: 'center', opacity: canClick ? 1 : 0.8 }}>
                     <img src="coworker_crying_1772546833911.png" alt="Coworker" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '10px', color: '#3b82f6' }}>{activeEvent.caller}</h2>
                     <p style={{ fontSize: '1.1rem', marginBottom: '30px', fontWeight: 'bold' }}>"{activeEvent.message}"</p>
                     <div style={{ display: 'flex', width: '100%', gap: '15px' }}>
-                        <button className="btn btn-outline" style={{ flex: 1, padding: '15px', color: '#ef4444', borderColor: '#ef4444' }} onClick={handleIgnoreCall}>
+                        <button className="btn btn-outline" style={{ flex: 1, padding: '15px', color: '#ef4444', borderColor: '#ef4444', cursor: canClick ? 'pointer' : 'default' }} onClick={canClick ? handleIgnoreCall : null}>
                             거절 (평판 -5)
                         </button>
-                        <button className="btn btn-primary" style={{ flex: 1, padding: '15px' }} onClick={isCprActive ? () => alert("CPR 중에는 도와줄 수 없습니다!") : handleAcceptCall} disabled={isCprActive}>
+                        <button className="btn btn-primary" style={{ flex: 1, padding: '15px', cursor: (canClick && !isCprActive) ? 'pointer' : 'default' }} onClick={(canClick && !isCprActive) ? handleAcceptCall : (isCprActive ? () => alert("CPR 중에는 도와줄 수 없습니다!") : null)} disabled={isCprActive}>
                             도와주기 (+10 평판)
                         </button>
                     </div>
@@ -182,20 +182,26 @@ const PhoneOverlay = () => {
     // Render for SOS Menu
     if (activeEvent.type === 'SOS_MENU') {
         const executeSos = (isCoffee) => {
+            if (!canClick) return;
             const state = useGameStore.getState();
             if (state.duties.length === 0) {
                 clearEvent();
                 return;
             }
 
-            // Priorities: First find if there's any ABGA.
-            // ABGA is hard to track if it specifically failed (unless we parse it), but we can just prioritize ABGA.
+            const coffeePrice = 4500;
+            if (isCoffee && state.wallet < coffeePrice) {
+                alert("주머니에 돈이 부족합니다... 커피 한 잔 사달라고 하기 미안하네요. (4,500원 필요)");
+                return;
+            }
+
             const abgaDuty = state.duties.find(d => d.type?.id === 'ABGA');
-            const targetDutyId = abgaDuty ? abgaDuty.id : state.duties[0].id; // priority to ABGA, else oldest
+            const targetDutyId = abgaDuty ? abgaDuty.id : state.duties[0].id;
 
             let success = false;
             let repMod = 0;
             let stmMod = 0;
+            let walletMod = 0;
             let msg = '';
 
             if (isCoffee) {
@@ -204,24 +210,24 @@ const PhoneOverlay = () => {
                     return;
                 }
                 stmMod = -15;
-                repMod = 5; // Reputation increases for being nice
-                success = true; // 100% success
-                msg = "커피 조공 성공! 동기가 기뻐하며 가장 까다로운 듀티(ABGA 등)를 먼저 해결해 줍니다.";
+                repMod = 5;
+                walletMod = -coffeePrice;
+                success = true;
+                msg = `내 돈 ${coffeePrice}원을 써서 커피 조공 성공! 동기가 기뻐하며 까다로운 듀티를 해결해 줍니다.`;
             } else {
                 repMod = -15;
                 success = Math.random() > 0.4;
                 msg = success ? "동기: '아 씨 나도 바쁜데... 알았어 내가 하나 할게.'" : "동기: '야 나 지금 CPR방이야 미쳐 끊어!!'";
             }
 
-            // Apply modifiers
             state.modifyReputation(repMod);
             if (stmMod) state.modifyStamina(stmMod);
+            if (walletMod) state.modifyWallet(walletMod);
 
             if (success) {
                 state.completeDuty(targetDutyId);
             }
 
-            // Immediately show SOS result
             useGameStore.setState({
                 activeEvent: {
                     type: 'SOS_RESULT',
@@ -231,21 +237,30 @@ const PhoneOverlay = () => {
             });
         };
 
+        const { wallet } = useGameStore.getState();
+        const coffeePrice = 4500;
+
         return (
-            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.8)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
-                <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: 'white', textAlign: 'center' }}>
+            <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.8)', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
+                <div className="glass-panel" style={{ margin: 'auto 20px', borderRadius: '15px', padding: '20px', backgroundColor: 'white', textAlign: 'center', opacity: canClick ? 1 : 0.8 }}>
                     <h2 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#1f2937' }}>동기에게 부탁하기</h2>
-                    <p style={{ marginBottom: '20px', fontSize: '1.1rem', color: '#4b5563' }}>어떤 방식으로 부탁하시겠습니까?</p>
+                    <p style={{ marginBottom: '10px', fontSize: '1.1rem', color: '#4b5563' }}>어떤 방식으로 부탁하시겠습니까?</p>
+                    <p style={{ marginBottom: '20px', fontSize: '0.9rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>내 주머니 사정: {wallet.toLocaleString()}원</p>
+
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <button className="btn btn-warning" style={{ padding: '15px' }} onClick={() => executeSos(true)}>
-                            ☕ 커피 조공 찬스 (체력 -15, 평판 +5)<br />
-                            <span style={{ fontSize: '0.9rem', opacity: 0.9 }}>성공률 100% / 까다로운 듀티(ABGA) 우선 해결</span>
+                        <button
+                            className="btn btn-warning"
+                            style={{ padding: '15px', cursor: canClick ? 'pointer' : 'default', opacity: wallet < coffeePrice ? 0.6 : 1 }}
+                            onClick={() => executeSos(true)}
+                        >
+                            ☕ 커피 조공 찬스 ({coffeePrice.toLocaleString()}원, 체력 -15, 평판 +5)<br />
+                            <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{wallet < coffeePrice ? '잔액 부족' : '성공률 100% / ABGA 우선 해결'}</span>
                         </button>
-                        <button className="btn btn-danger" style={{ padding: '15px' }} onClick={() => executeSos(false)}>
+                        <button className="btn btn-danger" style={{ padding: '15px', cursor: canClick ? 'pointer' : 'default' }} onClick={() => executeSos(false)}>
                             🙏 맨입으로 부탁 (평판 -15)<br />
                             <span style={{ fontSize: '0.9rem', opacity: 0.9 }}>성공률 60%</span>
                         </button>
-                        <button className="btn btn-outline" style={{ padding: '15px', color: '#6b7280', borderColor: '#d1d5db' }} onClick={clearEvent}>
+                        <button className="btn btn-outline" style={{ padding: '15px', color: '#6b7280', borderColor: '#d1d5db', cursor: canClick ? 'pointer' : 'default' }} onClick={canClick ? clearEvent : null}>
                             취소
                         </button>
                     </div>
@@ -264,14 +279,15 @@ const PhoneOverlay = () => {
     }
 
     return (
-        <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.7)', pointerEvents: canClick ? 'auto' : 'none', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s' }}>
+        <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.7)', opacity: canClick ? 1 : 0.9, transition: 'opacity 0.2s', pointerEvents: 'auto' }}>
             <div
                 className="glass-panel vibrating"
                 style={{
                     marginTop: 'auto', marginBottom: 'auto',
                     marginLeft: '20px', marginRight: '20px',
                     borderRadius: '20px', padding: '20px',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center'
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    opacity: canClick ? 1 : 0.8
                 }}
             >
                 <img src={callerImage} alt="Caller" style={{ height: '120px', margin: '0 auto 15px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -285,8 +301,8 @@ const PhoneOverlay = () => {
                 <div style={{ display: 'flex', width: '100%', gap: '15px' }}>
                     <button
                         className="btn btn-danger"
-                        style={{ flex: 1, padding: '15px' }}
-                        onClick={handleIgnoreCall}
+                        style={{ flex: 1, padding: '15px', cursor: canClick ? 'pointer' : 'default' }}
+                        onClick={canClick ? handleIgnoreCall : null}
                     >
                         <PhoneOff size={24} /> <br />
                         {isCprActive ? "바쁨! 무시하기" : "무시 (평판 -15)"}
@@ -294,8 +310,8 @@ const PhoneOverlay = () => {
 
                     <button
                         className="btn btn-success"
-                        style={{ flex: 1, padding: '15px', backgroundColor: isCprActive ? '#9ca3af' : '#10b981', color: 'white' }}
-                        onClick={isCprActive ? () => alert("CPR 중에는 전화를 받을 수 없습니다!") : handleAcceptCall}
+                        style={{ flex: 1, padding: '15px', backgroundColor: (canClick && !isCprActive) ? '#10b981' : '#9ca3af', color: 'white', cursor: (canClick && !isCprActive) ? 'pointer' : 'default' }}
+                        onClick={(canClick && !isCprActive) ? handleAcceptCall : (isCprActive ? () => alert("CPR 중에는 전화를 받을 수 없습니다!") : null)}
                         disabled={isCprActive}
                     >
                         <Phone size={24} /> <br />
