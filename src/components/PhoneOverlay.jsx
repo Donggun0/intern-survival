@@ -191,9 +191,9 @@ const PhoneOverlay = () => {
                 return;
             }
 
-            const coffeePrice = 4500;
+            const coffeePrice = 3000;
             if (isCoffee && state.wallet < coffeePrice) {
-                alert("주머니에 돈이 부족합니다... 커피 한 잔 사달라고 하기 미안하네요. (4,500원 필요)");
+                alert("주머니에 돈이 부족합니다... 커피 한 잔 사달라고 하기 미안하네요. (3,000원 필요)");
                 return;
             }
 
@@ -240,7 +240,7 @@ const PhoneOverlay = () => {
         };
 
         const { wallet } = useGameStore.getState();
-        const coffeePrice = 4500;
+        const coffeePrice = 3000;
 
         return (
             <div className="overlay-screen" style={{ pointerEvents: 'auto' }}>
