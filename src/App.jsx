@@ -16,7 +16,8 @@ function App() {
   const {
     time, stamina, mental, reputation,
     tick, isResting, toggleRest, useSos, gameOver, gameOverReason, dayComplete,
-    activeEvent, triggerEvent, activeMiniGame, duties, addDuty, modifyStamina, modifyMental
+    activeEvent, triggerEvent, activeMiniGame, duties, addDuty, modifyStamina, modifyMental,
+    isShiftEnding, finishDay
   } = useGameStore();
 
   const [snackActive, setSnackActive] = React.useState(false);
@@ -37,15 +38,15 @@ function App() {
       const currentState = useGameStore.getState();
 
       // Random Event Spawner
-      if (!currentState.activeEvent && !currentState.gameOver && !currentState.dayComplete) {
+      if (!currentState.activeEvent && !currentState.gameOver && !currentState.dayComplete && !currentState.isShiftEnding) {
         const rand = Math.random();
         const isLunchTime = time >= 12 * 60 && time <= 13 * 60;
 
-        // Base probabilities modified by lunch time
-        const callProb = isLunchTime ? 0.02 : 0.05; // Less calls during lunch
-        const cprProb = 0.012; // Increased to ~1.2% per tick (every ~80 seconds on average)
-        const profProb = isLunchTime ? 0.015 : 0.005; // Professor hits harder during lunch
-        const coworkerProb = isLunchTime ? 0.02 : 0.01; // Coworkers ask for more help during lunch
+        // Base probabilities increased for higher difficulty
+        const callProb = isLunchTime ? 0.04 : 0.08;
+        const cprProb = 0.02;
+        const profProb = isLunchTime ? 0.02 : 0.01;
+        const coworkerProb = isLunchTime ? 0.03 : 0.02;
 
         if (rand < callProb) {
           const newDuty = generateDuty();
@@ -56,9 +57,9 @@ function App() {
           triggerEvent(generateProfessorRound());
         } else if (rand > (1 - cprProb - profProb - coworkerProb)) {
           triggerEvent(generateCoworkerRequestEvent());
-        } else if (rand > 0.950 && !snackActive) {
+        } else if (rand > 0.940 && !snackActive) {
           setSnackActive(true);
-          setTimeout(() => setSnackActive(false), 8000); // Disappears after 8 seconds
+          setTimeout(() => setSnackActive(false), 6000);
         }
       }
 
@@ -72,7 +73,7 @@ function App() {
         useGameStore.setState({ gameOver: true, gameOverReason: '멘탈이 완전히 붕괴되었습니다. 더 이상 버티지 못하고 하얀 가운을 벗어던진 채 병원 문을 박차고 나갔습니다. (도망턴 발생)' });
       }
 
-    }, 1000); // 1 real second = 1 game minute
+    }, 500); // 0.5 real second = 1 game minute (Total 5 mins for 10 hours)
     return () => clearInterval(timer);
   }, [triggerEvent, time, duties.length, addDuty, snackActive]);
 
@@ -86,8 +87,8 @@ function App() {
     return (
       <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#7f1d1d', color: 'white' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>GAME OVER</h1>
-        <img src="intern_tired_1772544933334.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px', filter: 'grayscale(100%)' }} />
-        <p style={{ fontSize: '1.2rem', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '20px', borderRadius: '10px' }}>{gameOverReason}</p>
+        <img src="grade_f_doctor_1772631419798.png" alt="Tired Intern" style={{ height: '200px', marginBottom: '20px', borderRadius: '15px' }} />
+        <p style={{ fontSize: '1.2rem', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '20px', borderRadius: '10px', maxWidth: '80%' }}>{gameOverReason}</p>
         <button className="btn btn-outline" style={{ borderColor: 'white', color: 'white', marginTop: '30px' }} onClick={() => window.location.reload()}>다시 시작</button>
       </div>
     );
@@ -95,58 +96,60 @@ function App() {
 
   if (dayComplete) {
     const { completedDutiesCount } = useGameStore.getState();
-    const totalScore = reputation + (completedDutiesCount * 2);
+    const totalScore = reputation + (completedDutiesCount * 3); // Slightly more weight to duties
 
     const getGrade = (score) => {
-      if (score >= 120) return { grade: 'S', color: '#fcd34d', label: '전설의 인턴' };
-      if (score >= 100) return { grade: 'A', color: '#60a5fa', label: '에이스 인턴' };
-      if (score >= 80) return { grade: 'B', color: '#34d399', label: '성실한 인턴' };
-      if (score >= 60) return { grade: 'C', color: '#fbbf24', label: '보통의 인턴' };
-      if (score >= 40) return { grade: 'D', color: '#f87171', label: '위태로운 인턴' };
-      return { grade: 'F', color: '#ef4444', label: '자퇴 권고' };
+      if (score >= 150) return { grade: 'S', color: '#fcd34d', label: '전설의 인턴', img: 'grade_s_doctor_1772631371625.png' };
+      if (score >= 120) return { grade: 'A', color: '#60a5fa', label: '에이스 인턴', img: 'grade_a_doctor_1772631387677.png' };
+      if (score >= 90) return { grade: 'B', color: '#34d399', label: '성실한 인턴', img: 'grade_a_doctor_1772631387677.png' };
+      if (score >= 60) return { grade: 'C', color: '#fbbf24', label: '보통의 인턴', img: 'grade_c_doctor_1772631405265.png' };
+      if (score >= 30) return { grade: 'D', color: '#f87171', label: '위태로운 인턴', img: 'grade_c_doctor_1772631405265.png' };
+      return { grade: 'F', color: '#ef4444', label: '자퇴 권고', img: 'grade_f_doctor_1772631419798.png' };
     };
 
     const result = getGrade(totalScore);
 
     return (
-      <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#065f46', color: 'white' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>퇴근 시간!</h1>
-        <p style={{ fontSize: '1.2rem', marginBottom: '20px', opacity: 0.9 }}>수고하셨습니다. 오늘의 업무 평가 결과입니다.</p>
+      <div className="app-container result-screen" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#064e3b', color: 'white', padding: '20px' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '5px' }}>퇴근 성공!</h1>
+        <p style={{ fontSize: '1.1rem', marginBottom: '20px', opacity: 0.9 }}>고생하셨습니다. 오늘의 업무 평가입니다.</p>
 
-        <div className="glass-panel" style={{ width: '90%', maxWidth: '400px', padding: '30px', borderRadius: '20px', textAlign: 'center', color: 'black', backgroundColor: 'rgba(255,255,255,0.95)' }}>
-          <div style={{ fontSize: '5rem', fontWeight: 'bold', color: result.color, lineHeight: '1', marginBottom: '10px', textShadow: '2px 2px 4px rgba(0,0,0,0.1)' }}>
+        <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', padding: '25px', borderRadius: '25px', textAlign: 'center', color: 'black', backgroundColor: 'rgba(255,255,255,0.98)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.3)' }}>
+          <img src={result.img} alt="Grade Image" style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '15px', border: `5px solid ${result.color}`, objectFit: 'cover' }} />
+
+          <div style={{ fontSize: '4.5rem', fontWeight: 'bold', color: result.color, lineHeight: '1', marginBottom: '5px' }}>
             {result.grade}
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '25px', color: '#1f2937' }}>
+          <div style={{ fontSize: '1.6rem', fontWeight: 'bold', marginBottom: '20px', color: '#1f2937' }}>
             {result.label}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', textAlign: 'left', marginBottom: '25px' }}>
-            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>최종 평판</div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{reputation}점</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'left', marginBottom: '20px' }}>
+            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>최종 평판</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{Math.floor(reputation)}점</div>
             </div>
-            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>완료한 업무</div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#059669' }}>{completedDutiesCount}개</div>
+            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>업무 완수</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#059669' }}>{completedDutiesCount}건</div>
             </div>
-            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>남은 체력</div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#dc2626' }}>{stamina}%</div>
+            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 체력</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#dc2626' }}>{Math.floor(stamina)}%</div>
             </div>
-            <div style={{ padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>남은 멘탈</div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2563eb' }}>{mental}%</div>
+            <div style={{ padding: '12px', backgroundColor: '#f3f4f6', borderRadius: '12px' }}>
+              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>남은 멘탈</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2563eb' }}>{Math.floor(mental)}%</div>
             </div>
           </div>
 
-          <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px' }}>
-            <span style={{ fontSize: '0.9rem', color: '#6b7280' }}>종합 점수: </span>
-            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827' }}>{totalScore}점</span>
+          <div style={{ borderTop: '2px dashed #e5e7eb', paddingTop: '15px' }}>
+            <span style={{ fontSize: '1rem', color: '#6b7280' }}>총합 점수: </span>
+            <span style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827' }}>{Math.floor(totalScore)}점</span>
           </div>
         </div>
 
-        <button className="btn btn-primary" style={{ marginTop: '30px', padding: '12px 40px', fontSize: '1.1rem' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
+        <button className="btn btn-primary" style={{ marginTop: '25px', width: '100%', maxWidth: '300px', padding: '15px', borderRadius: '15px', fontSize: '1.2rem', boxShadow: '0 4px 14px 0 rgba(0,0,0,0.39)' }} onClick={() => window.location.reload()}>새로운 아침 맞이하기</button>
       </div>
     );
   }
@@ -156,7 +159,7 @@ function App() {
       {/* Top Bar Stats */}
       <div className="top-bar glass-panel">
         <div className="time-display" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', lineHeight: '1.2' }}>
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{formatTime(time)}</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: time >= 18 * 60 ? 'var(--danger)' : 'var(--primary-color)' }}>{formatTime(time)}</span>
           <span style={{ fontSize: '0.8rem', color: '#4b5563' }}>~ 18:00 퇴근</span>
           {time >= 12 * 60 && time < 13 * 60 && <span style={{ fontSize: '0.8rem', color: '#b45309', fontWeight: 'bold' }}>(점심시간)</span>}
         </div>
@@ -233,6 +236,39 @@ function App() {
       {/* Overlays */}
       <MiniGameModal />
       <PhoneOverlay />
+
+      {/* Shift Evaluation Modal */}
+      {isShiftEnding && (
+        <div className="overlay-screen" style={{ backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="glass-panel" style={{ width: '90%', maxWidth: '400px', padding: '30px', borderRadius: '25px', textAlign: 'center', backgroundColor: 'white' }}>
+            <h2 style={{ fontSize: '1.8rem', color: 'var(--danger)', marginBottom: '15px', fontWeight: 'bold' }}>🕒 18:00 퇴근 시간!</h2>
+            <img src="intern_tired_1772544933334.png" alt="Tired" style={{ width: '120px', marginBottom: '20px', borderRadius: '50%' }} />
+            <p style={{ fontSize: '1.1rem', marginBottom: '10px', color: '#1f2937' }}>
+              공식적인 일과 시간이 끝났습니다.<br />하지만 아직 <strong>{duties.length}개</strong>의 업무가 남았습니다.
+            </p>
+            <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '25px' }}>
+              그냥 퇴근하면 남은 일 하나당 평판이 <strong>15점</strong>씩 깎입니다.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => useGameStore.setState({ isShiftEnding: false })}
+                style={{ height: '60px', fontSize: '1.1rem' }}
+              >
+                남은 일 다 하고 가기 (열정!)
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => finishDay()}
+                style={{ height: '60px', fontSize: '1.1rem', borderColor: 'var(--danger)', color: 'var(--danger)' }}
+              >
+                미안하다, 나 퇴근한다.
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

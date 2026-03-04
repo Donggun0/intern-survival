@@ -21,68 +21,67 @@ const useGameStore = create((set, get) => ({
     completedDutiesCount: 0,
     isResting: false,
     isCollapsed: false,
+    isShiftEnding: false,
 
-    // Tick time (1 min = 1 tick, or as needed by components)
+    // Tick time
     tick: () => set((state) => {
         if (state.gameOver || state.dayComplete) return state;
 
-        // Time advances
         const newTime = state.time + 1;
         let nextState = { time: newTime };
 
-        // If resting, recover stamina and mental
         if (state.isResting) {
-            // Explicitly calculate new values to ensure both are updated even if one is at max
-            const staminaBonus = state.isCollapsed ? 4 : 3; // Recover slightly faster when collapsed
+            const staminaBonus = state.isCollapsed ? 5 : 4;
             nextState.stamina = Math.min(100, state.stamina + staminaBonus);
-            nextState.mental = Math.min(100, state.mental + 1);
+            nextState.mental = Math.min(100, state.mental + 1.2);
+        } else {
+            // Natural mental drain even when not resting, because of hospital stress
+            nextState.mental = Math.max(0, state.mental - 0.2);
         }
 
-        // Recover from collapse
-        if (state.isCollapsed && (nextState.stamina ?? state.stamina) >= 30) {
+        if (state.isCollapsed && (nextState.stamina ?? state.stamina) >= 40) {
             nextState.isCollapsed = false;
         }
 
-        // Apply inaction penalties
         let rep = state.reputation;
-        if (state.duties.length >= 4 && newTime % 5 === 0) {
-            rep -= 1; // 1 rep loss every 5 mins if 4+ duties
+        if (state.duties.length >= 4 && newTime % 4 === 0) {
+            rep -= 1.5;
+            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 1.0); // More stress
         }
-        if (state.duties.length > 0 && (newTime - state.duties[0].createdAt) > 60 && newTime % 10 === 0) {
-            rep -= 1; // 1 rep loss every 10 mins if oldest duty is > 60 mins old
+        if (state.duties.length > 0 && (newTime - state.duties[0].createdAt) > 45 && newTime % 8 === 0) {
+            rep -= 1.2;
+            nextState.mental = Math.max(0, (nextState.mental ?? state.mental) - 0.8);
         }
 
         if (rep !== state.reputation) {
             nextState.reputation = Math.max(0, rep);
         }
 
-        if (newTime >= START_TIME + GAME_DURATION_MINUTES) {
-            nextState.dayComplete = true;
+        if (newTime >= START_TIME + GAME_DURATION_MINUTES && !state.isShiftEnding) {
+            nextState.isShiftEnding = true;
         }
 
         return nextState;
     }),
 
-    // Add a duty to the queue
     addDuty: (duty) => set((state) => ({
         duties: [...state.duties, {
             ...duty,
             id: Date.now() + Math.random().toString(36).substr(2, 9),
             createdAt: state.time
-        }]
+        }],
+        mental: Math.max(0, state.mental - 2.5) // Phone call call/new duty creates stress
     })),
 
-    // Completing a duty
     completeDuty: (id) => set((state) => ({
         duties: state.duties.filter(d => d.id !== id),
-        completedDutiesCount: state.completedDutiesCount + 1
+        completedDutiesCount: state.completedDutiesCount + 1,
+        mental: Math.min(100, state.mental + 3) // Satisfaction after finishing work
     })),
 
-    // Modifying stats
     modifyStamina: (amount) => set((state) => {
         const stamina = Math.max(0, Math.min(100, state.stamina + amount));
         if (stamina === 0 && !state.gameOver) {
-            // Forced rest triggered and collapsed
             return { stamina, isResting: true, isCollapsed: true };
         }
         return { stamina };
@@ -90,16 +89,26 @@ const useGameStore = create((set, get) => ({
 
     modifyMental: (amount, reason = '') => set((state) => {
         const mental = Math.max(0, Math.min(100, state.mental + amount));
-        if (mental === 0 && !state.gameOver) {
-            // Trigger game over on mental breakdown
-            return { mental };
-        }
         return { mental };
     }),
 
     modifyReputation: (amount) => set((state) => {
         const reputation = Math.max(0, Math.min(100, state.reputation + amount));
-        return { reputation };
+        // Losing rep also hurts mental (stress from manager/nurse)
+        let mentalUpdate = {};
+        if (amount < 0) {
+            mentalUpdate.mental = Math.max(0, state.mental + (amount * 1.2));
+        }
+        return { reputation, ...mentalUpdate };
+    }),
+
+    finishDay: (options = { force: false }) => set((state) => {
+        let nextRep = state.reputation;
+        if (!options.force && state.duties.length > 0) {
+            // Deduct reputation for each unfinished duty
+            nextRep = Math.max(0, state.reputation - (state.duties.length * 15));
+        }
+        return { dayComplete: true, isShiftEnding: false, reputation: nextRep };
     }),
 
     // Starting & Ending a MiniGame

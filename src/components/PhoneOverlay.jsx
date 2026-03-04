@@ -38,9 +38,10 @@ const PhoneOverlay = () => {
 
         if (activeEvent.type === 'PHONE_CALL' || activeEvent.eventType === 'CALL' || activeEvent.eventType === 'COWORKER_REQUEST') {
             addDuty(activeEvent.duty || activeEvent.dutyObj);
+            modifyMental(-3, '업무가 추가되어 스트레스를 받습니다.'); // Small mental drain per accept
             if (activeEvent.eventType === 'COWORKER_REQUEST') {
                 modifyReputation(10);
-                modifyMental(5, '동기를 도와주어 뿌듯합니다.');
+                modifyMental(2, '동기를 도와주어 뿌듯하지만 조금 피곤합니다.');
             }
         }
         clearEvent();
@@ -57,10 +58,10 @@ const PhoneOverlay = () => {
 
         if (activeEvent.eventType === 'COWORKER_REQUEST') {
             modifyReputation(-5);
-            modifyMental(-2, '동기의 부탁을 거절해서 마음이 불편합니다.');
+            modifyMental(-8, '동기의 부탁을 거절해서 마음이 매우 불편합니다.');
         } else if (activeEvent.type === 'PHONE_CALL' || activeEvent.eventType === 'CALL') {
             modifyReputation(-15);
-            modifyMental(-5, '콜을 무시해서 찝찝합니다. 병동 간호사의 평판이 크게 깎였습니다.');
+            modifyMental(-12, '콜을 무시해서 찝찝합니다. 간호사들의 뒷담화가 들리는 것 같습니다.');
 
             // Still add the duty but mark as missed (optional legacy behavior)
             if (activeEvent.dutyObj) {
