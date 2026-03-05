@@ -14,6 +14,7 @@ const useGameStore = create((set, get) => ({
     dayComplete: false,
     gameOver: false,
     gameOverReason: null,
+    gameStarted: false,
 
     duties: [],
     activeMiniGame: null,

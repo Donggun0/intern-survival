@@ -15,7 +15,7 @@ const formatTime = (minutes) => {
 function App() {
   const {
     time, stamina, mental, reputation, wallet,
-    tick, isResting, toggleRest, useSos, gameOver, gameOverReason, dayComplete,
+    tick, isResting, toggleRest, useSos, gameOver, gameOverReason, dayComplete, gameStarted,
     activeEvent, triggerEvent, activeMiniGame, duties, addDuty, modifyStamina, modifyMental, modifyWallet,
     isShiftEnding, finishDay
   } = useGameStore();
@@ -27,6 +27,8 @@ function App() {
 
   // Master game loop
   useEffect(() => {
+    if (!gameStarted) return;
+
     // Prepopulate initial duties when game starts
     if (time === 8 * 60 && duties.length === 0) {
       addDuty(generateDuty());
@@ -109,6 +111,67 @@ function App() {
     modifyWallet(amount);
     setCoinActive(false);
   };
+
+  if (!gameStarted) {
+    const resolutions = [
+      "오늘만 무사히... 제발 칼퇴하게 해주세요.",
+      "교수님 눈에 띄지 말고 조용히 있다가 가자.",
+      "환자분들 모두 건강하게! 나도 건강하게!",
+      "실수하지 말자. 데스노트(오더 오류)만은 안 된다.",
+      "오늘은 동기가 SOS 안 치겠지? 믿는다 친구야.",
+      "커피 수혈... 커피가 필요해...",
+      "어제 당직의 피로가 가시질 않네... 힘내자."
+    ];
+    const tips = [
+      "💡 듀티가 4개 이상 쌓이면 업무 압박으로 멘탈이 급격히 깎입니다!",
+      "💡 환자가 부른 지 40분이 넘으면 화를 낼 수 있으니 주의하세요.",
+      "💡 CPR 상황에서 도망치면 평판이 무려 30점이나 깎입니다.",
+      "💡 돈이 여유 있다면 동기에게 커피를 사주며 SOS를 쳐보세요. 100% 확률로 도와줍니다.",
+      "💡 자연적인 멘탈 감소를 막으려면 틈틈이 휴식을 취해야 합니다.",
+      "💡 교수님의 돌발 질문에 정답을 맞히면 평판과 멘탈이 크게 오릅니다.",
+      "💡 간식이나 동전을 주워 체력과 지갑을 충전하는 것을 잊지 마세요!"
+    ];
+
+    const randomResolution = resolutions[Math.floor(Math.random() * resolutions.length)];
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
+    return (
+      <div className="app-container" style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#1e293b', color: 'white', padding: '30px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', fontWeight: 'bold', color: '#60a5fa' }}>K-INTERN</h1>
+        <p style={{ fontSize: '1.2rem', marginBottom: '30px', opacity: 0.9 }}>대한민국 인턴 생존 시뮬레이션</p>
+
+        <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', padding: '25px', borderRadius: '25px', backgroundColor: 'rgba(255,255,255,0.95)', color: '#1e293b', marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '1.3rem', marginBottom: '15px', color: '#2563eb', fontWeight: 'bold' }}>오늘의 출근 각오</h2>
+          <p style={{ fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '20px', lineHeight: '1.5' }}>"{randomResolution}"</p>
+
+          <div style={{ borderTop: '2px dashed #cbd5e1', paddingTop: '20px', textAlign: 'left' }}>
+            <p style={{ fontSize: '0.95rem', color: '#4b5563', marginBottom: '10px' }}>
+              <strong>게임 목표:</strong> 저녁 18:00까지 멘탈과 평판을 유지하며 밀려드는 업무를 완수하고 퇴근하세요.
+            </p>
+            <div style={{ padding: '12px', backgroundColor: '#eff6ff', borderRadius: '12px', border: '1px solid #bfdbfe' }}>
+              <p style={{ fontSize: '0.9rem', color: '#1e40af', fontWeight: 'bold' }}>{randomTip}</p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          className="btn btn-primary"
+          style={{
+            width: '90%',
+            maxWidth: '400px',
+            padding: '18px',
+            borderRadius: '15px',
+            fontSize: '1.4rem',
+            fontWeight: 'bold',
+            boxShadow: '0 10px 15px -3px rgba(37, 99, 235, 0.4)'
+          }}
+          onClick={() => useGameStore.setState({ gameStarted: true })}
+        >
+          병동으로 출근하기
+        </button>
+      </div>
+    );
+  }
 
   if (gameOver) {
     const { completedDutiesCount } = useGameStore.getState();
