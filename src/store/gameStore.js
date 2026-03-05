@@ -24,10 +24,11 @@ const useGameStore = create((set, get) => ({
     isResting: false,
     isCollapsed: false,
     isShiftEnding: false,
+    shiftEndTriggered: false,
 
     // Tick time
     tick: () => set((state) => {
-        if (state.gameOver || state.dayComplete) return state;
+        if (state.gameOver || state.dayComplete || state.isShiftEnding) return state;
 
         const newTime = state.time + 1;
         let nextState = { time: newTime };
@@ -59,8 +60,9 @@ const useGameStore = create((set, get) => ({
             nextState.reputation = Math.max(0, rep);
         }
 
-        if (newTime >= START_TIME + GAME_DURATION_MINUTES && !state.isShiftEnding) {
+        if (newTime >= START_TIME + GAME_DURATION_MINUTES && !state.shiftEndTriggered) {
             nextState.isShiftEnding = true;
+            nextState.shiftEndTriggered = true;
         }
 
         return nextState;
