@@ -60,9 +60,16 @@ const useGameStore = create((set, get) => ({
             nextState.reputation = Math.max(0, rep);
         }
 
-        if (newTime >= START_TIME + GAME_DURATION_MINUTES && !state.shiftEndTriggered) {
-            nextState.isShiftEnding = true;
-            nextState.shiftEndTriggered = true;
+        if (newTime >= START_TIME + GAME_DURATION_MINUTES) {
+            if (state.duties.length === 0) {
+                // If shift ended and no duties left, finish automatically
+                nextState.dayComplete = true;
+                nextState.isShiftEnding = false;
+            } else if (!state.shiftEndTriggered) {
+                // First time hitting shift end with duties left
+                nextState.isShiftEnding = true;
+                nextState.shiftEndTriggered = true;
+            }
         }
 
         return nextState;
@@ -77,12 +84,19 @@ const useGameStore = create((set, get) => ({
         mental: Math.max(0, state.mental - 1.0) // Reduced stress from 1.5
     })),
 
-    completeDuty: (id) => set((state) => ({
-        duties: state.duties.filter(d => d.id !== id),
-        completedDutiesCount: state.completedDutiesCount + 1,
-        mental: Math.min(100, state.mental + 6), // More satisfaction
-        reputation: Math.min(100, state.reputation + 2) // Bonus rep for finishing duty
-    })),
+    completeDuty: (id) => set((state) => {
+        const nextDuties = state.duties.filter(d => d.id !== id);
+        const nextDayComplete = (state.time >= START_TIME + GAME_DURATION_MINUTES && nextDuties.length === 0);
+
+        return {
+            duties: nextDuties,
+            completedDutiesCount: state.completedDutiesCount + 1,
+            mental: Math.min(100, state.mental + 6),
+            reputation: Math.min(100, state.reputation + 2),
+            dayComplete: nextDayComplete || state.dayComplete,
+            isShiftEnding: nextDayComplete ? false : state.isShiftEnding
+        };
+    }),
 
     modifyStamina: (amount) => set((state) => {
         const stamina = Math.max(0, Math.min(100, state.stamina + amount));
