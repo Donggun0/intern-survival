@@ -98,7 +98,7 @@ function App() {
 
     }, 500); // 0.5 real second = 1 game minute (Total 5 mins for 10 hours)
     return () => clearInterval(timer);
-  }, [triggerEvent, time, duties.length, addDuty, snackActive, coinActive]);
+  }, [gameStarted, triggerEvent, time, duties.length, addDuty, snackActive, coinActive]);
 
   const handleSnackClick = () => {
     modifyStamina(25);
